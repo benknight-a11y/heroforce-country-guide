@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HeroForce Global — Country Employment Guides</title>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -253,14 +252,8 @@
 </div>
 
 <script>
-// ── EmailJS config ──
-// Sign up free at emailjs.com → create a service + template, then paste IDs below
-const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';   // e.g. 'user_abc123'
-const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';   // e.g. 'service_heroforce'
-const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';  // e.g. 'template_lead'
-const TO_EMAIL = 'ben.knight@employmenthero.com';
-
-emailjs.init(EMAILJS_PUBLIC_KEY);
+// ── Google Apps Script webhook ──
+const WEBHOOK_URL = 'https://script.google.com/a/macros/employmenthero.com/s/AKfycbyfdnbyjMbF_BXma2BZpR-F5LX-reLoHjXMTlvWeWrWCrhcc0-t-qM7crZHw1-CdeNQ/exec';
 
 // ── Data ──
 const G = 'https://drive.google.com/file/d/';
@@ -476,7 +469,6 @@ document.getElementById('btnSubmit').addEventListener('click', async function() 
   document.getElementById('sendError').classList.remove('show');
 
   const submission = {
-    to_email:   TO_EMAIL,
     first_name: document.getElementById('f-first').value.trim(),
     last_name:  document.getElementById('f-last').value.trim(),
     company:    document.getElementById('f-company').value.trim(),
@@ -489,7 +481,11 @@ document.getElementById('btnSubmit').addEventListener('click', async function() 
   };
 
   try {
-    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, submission);
+    const response = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      body: JSON.stringify(submission),
+    });
+    if (!response.ok) throw new Error('Network error');
 
     // Show success
     document.getElementById('formState').style.display = 'none';
