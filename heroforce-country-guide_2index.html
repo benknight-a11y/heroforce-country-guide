@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeroForce Global — Country Employment Guides</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --purple: #6C1FD4; --purple-dark: #4B0FA3; --purple-light: #EDE8FA;
+    --purple-mid: #8B47E8; --text: #1A1A2E; --text-muted: #6B6B8A;
+    --border: #E0DAF5; --bg: #F8F6FE; --white: #FFFFFF;
+    --card-shadow: 0 1px 3px rgba(108,31,212,0.08), 0 4px 16px rgba(108,31,212,0.06);
+    --card-hover: 0 4px 12px rgba(108,31,212,0.14), 0 8px 28px rgba(108,31,212,0.10);
+    --red: #E53E3E;
+  }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* ── HEADER ── */
+  header { background: var(--purple); padding: 0 32px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; height: 64px; box-shadow: 0 2px 12px rgba(75,15,163,0.3); }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .logo-text { color: white; font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
+  .logo-text span { font-weight: 300; opacity: 0.8; }
+  .header-tag { background: rgba(255,255,255,0.15); color: white; font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.5px; }
+
+  /* ── HERO ── */
+  .hero { background: linear-gradient(135deg, var(--purple) 0%, var(--purple-mid) 60%, #A855F7 100%); padding: 56px 32px 48px; text-align: center; color: white; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); pointer-events: none; }
+  .hero h1 { font-size: clamp(24px, 4vw, 40px); font-weight: 700; letter-spacing: -0.8px; margin-bottom: 12px; position: relative; }
+  .hero p { font-size: 16px; opacity: 0.85; max-width: 540px; margin: 0 auto 32px; line-height: 1.6; position: relative; }
+  .search-wrap { max-width: 520px; margin: 0 auto; position: relative; }
+  .search-wrap svg { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+  #search { width: 100%; padding: 14px 16px 14px 46px; border: none; border-radius: 12px; font-size: 15px; font-family: 'Inter', sans-serif; background: white; color: var(--text); box-shadow: 0 4px 24px rgba(0,0,0,0.15); outline: none; transition: box-shadow 0.2s; }
+  #search:focus { box-shadow: 0 4px 24px rgba(0,0,0,0.2), 0 0 0 3px rgba(255,255,255,0.3); }
+  #search::placeholder { color: var(--text-muted); }
+
+  /* ── STATS ── */
+  .stats-bar { background: white; border-bottom: 1px solid var(--border); padding: 12px 32px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .stat { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-muted); }
+  .stat strong { color: var(--text); font-weight: 600; }
+  .stat-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--purple); display: inline-block; }
+  .results-info { padding: 16px 32px 0; font-size: 13px; color: var(--text-muted); max-width: 1200px; margin: 0 auto; }
+
+  /* ── GRID ── */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; padding: 16px 32px 48px; max-width: 1200px; margin: 0 auto; }
+  .card { background: var(--white); border-radius: 14px; border: 1px solid var(--border); box-shadow: var(--card-shadow); overflow: hidden; transition: box-shadow 0.2s, transform 0.15s, border-color 0.2s; }
+  .card:hover { box-shadow: var(--card-hover); border-color: #C4B0F0; transform: translateY(-1px); }
+  .card-header { padding: 18px 20px 14px; display: flex; align-items: flex-start; gap: 14px; }
+  .flag { font-size: 28px; line-height: 1; flex-shrink: 0; }
+  .country-info { flex: 1; min-width: 0; }
+  .country-name { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; color: var(--text); margin-bottom: 2px; }
+  .doc-count { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+  .card-docs { border-top: 1px solid var(--border); padding: 10px 20px 14px; display: flex; flex-direction: column; gap: 6px; }
+  .doc-link { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--purple); font-size: 13px; font-weight: 500; padding: 7px 10px; border-radius: 8px; background: transparent; transition: background 0.15s, color 0.15s; line-height: 1.4; cursor: pointer; border: none; width: 100%; text-align: left; font-family: 'Inter', sans-serif; }
+  .doc-link:hover { background: var(--purple-light); color: var(--purple-dark); }
+  .doc-type { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; flex-shrink: 0; }
+  .doc-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .coming-soon { padding: 10px 20px 14px; border-top: 1px solid var(--border); }
+  .coming-soon-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); background: #F5F5F5; padding: 5px 10px; border-radius: 6px; font-weight: 500; }
+  .no-results { grid-column: 1 / -1; text-align: center; padding: 64px 32px; color: var(--text-muted); }
+  .no-results h3 { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+
+  /* ── MODAL ── */
+  .modal-overlay { position: fixed; inset: 0; z-index: 1000; background: rgba(15,8,40,0.6); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+  .modal-overlay.active { opacity: 1; pointer-events: all; }
+  .modal { background: white; border-radius: 20px; width: 100%; max-width: 520px; box-shadow: 0 24px 80px rgba(108,31,212,0.25), 0 8px 24px rgba(0,0,0,0.12); overflow: hidden; transform: translateY(16px) scale(0.98); transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1); max-height: 90vh; overflow-y: auto; }
+  .modal-overlay.active .modal { transform: translateY(0) scale(1); }
+  .modal-header { background: linear-gradient(135deg, var(--purple) 0%, var(--purple-mid) 100%); padding: 24px 28px 20px; color: white; position: relative; }
+  .modal-close { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.15); border: none; border-radius: 8px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; transition: background 0.15s; }
+  .modal-close:hover { background: rgba(255,255,255,0.25); }
+  .modal-eyebrow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; margin-bottom: 6px; }
+  .modal-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 4px; }
+  .modal-subtitle { font-size: 13px; opacity: 0.8; line-height: 1.5; }
+  .modal-doc-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15); border-radius: 8px; padding: 6px 12px; margin-top: 12px; font-size: 12px; font-weight: 600; }
+
+  /* ── QUEUED DOCS ── */
+  .queued-docs { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
+  .queued-doc-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.12); border-radius: 8px; padding: 5px 10px; font-size: 12px; font-weight: 500; }
+
+  .modal-body { padding: 24px 28px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+  .form-group.last { margin-bottom: 0; }
+  .form-group label { font-size: 12px; font-weight: 600; color: var(--text); letter-spacing: 0.2px; }
+  .form-group label span { color: var(--red); margin-left: 2px; }
+  .form-group input, .form-group select, .form-group textarea { padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 9px; font-size: 14px; font-family: 'Inter', sans-serif; color: var(--text); background: white; outline: none; transition: border-color 0.15s, box-shadow 0.15s; width: 100%; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(108,31,212,0.12); }
+  .form-group input.error { border-color: var(--red) !important; box-shadow: 0 0 0 3px rgba(229,62,62,0.12) !important; }
+  .form-group input::placeholder, .form-group textarea::placeholder { color: #B0B0C8; }
+  .form-group textarea { resize: none; min-height: 72px; }
+  .field-error { font-size: 11px; color: var(--red); margin-top: 2px; display: none; }
+  .field-error.show { display: block; }
+
+  .country-checkboxes { border: 1.5px solid var(--border); border-radius: 9px; padding: 10px 12px; max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; transition: border-color 0.15s, box-shadow 0.15s; }
+  .country-checkboxes.error { border-color: var(--red); box-shadow: 0 0 0 3px rgba(229,62,62,0.12); }
+  .checkbox-item { display: flex; align-items: center; gap: 8px; padding: 3px 0; cursor: pointer; }
+  .checkbox-item input[type=checkbox] { accent-color: var(--purple); width: 14px; height: 14px; cursor: pointer; flex-shrink: 0; }
+  .checkbox-item label { font-size: 13px; color: var(--text); cursor: pointer; line-height: 1; }
+  .form-hint { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  .modal-footer { padding: 0 28px 28px; }
+  .btn-submit { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--purple) 0%, var(--purple-mid) 100%); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; transition: opacity 0.15s, transform 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-submit:hover:not(:disabled) { opacity: 0.92; }
+  .btn-submit:active:not(:disabled) { transform: scale(0.99); }
+  .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+  .btn-privacy { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 10px; line-height: 1.5; }
+  .send-error { font-size: 12px; color: var(--red); text-align: center; margin-top: 8px; display: none; }
+  .send-error.show { display: block; }
+
+  /* ── SUCCESS ── */
+  .modal-success { padding: 40px 28px; text-align: center; display: none; }
+  .success-icon { width: 64px; height: 64px; background: var(--purple-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 28px; }
+  .success-title { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .success-sub { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; }
+  .download-links { display: flex; flex-direction: column; gap: 10px; }
+  .btn-download { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; background: var(--purple); color: white; border-radius: 10px; text-decoration: none; font-size: 14px; font-weight: 600; transition: opacity 0.15s; }
+  .btn-download:hover { opacity: 0.88; }
+  .btn-download.secondary { background: var(--purple-light); color: var(--purple); }
+
+  footer { background: var(--text); color: rgba(255,255,255,0.5); text-align: center; padding: 24px 32px; font-size: 12px; line-height: 1.7; }
+  footer a { color: rgba(255,255,255,0.7); }
+
+  @media (max-width: 600px) {
+    header { padding: 0 16px; } .hero { padding: 36px 16px 32px; }
+    .stats-bar { padding: 12px 16px; } .results-info { padding: 12px 16px 0; }
+    .grid { padding: 12px 16px 32px; gap: 12px; }
+    .form-row { grid-template-columns: 1fr; }
+    .modal-body, .modal-footer { padding-left: 20px; padding-right: 20px; }
+    .modal-header { padding: 20px 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#">
+    <div class="logo-icon">⚡</div>
+    <div class="logo-text">HeroForce <span>by Employment Hero</span></div>
+  </a>
+  <span class="header-tag">EOR Country Guides</span>
+</header>
+
+<div class="hero">
+  <h1>Global Employment Guides</h1>
+  <p>Country-by-country compliance guides, statutory requirements, and EOR onboarding information for HeroForce clients.</p>
+  <div class="search-wrap">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input id="search" type="text" placeholder="Search by country…" autocomplete="off" autofocus>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat"><span class="stat-dot"></span><strong>39</strong> countries covered</div>
+  <div class="stat"><span class="stat-dot"></span>Employment Hero HeroForce EOR</div>
+  <div class="stat">Updated July 2026</div>
+</div>
+
+<div class="results-info" id="results-info"></div>
+<div class="grid" id="grid"></div>
+
+<footer>
+  <p>These guides are provided for general information only and do not constitute legal or professional advice.</p>
+  <p>© 2026 Employment Hero. All rights reserved. · <a href="https://employmenthero.com/heroforce" target="_blank">employmenthero.com/heroforce</a></p>
+</footer>
+
+<!-- ── MODAL ── -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+
+    <div class="modal-header">
+      <button class="modal-close" id="modalClose" aria-label="Close">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+      <div class="modal-eyebrow">Free Download</div>
+      <div class="modal-title">Get your employment guide</div>
+      <div class="modal-subtitle">Fill in your details for instant access to all selected guides.</div>
+      <div class="queued-docs" id="queuedDocs"></div>
+    </div>
+
+    <!-- FORM -->
+    <div id="formState">
+      <div class="modal-body">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name <span>*</span></label>
+            <input type="text" id="f-first" placeholder="Alice" autocomplete="given-name">
+            <div class="field-error" id="err-first">Required</div>
+          </div>
+          <div class="form-group">
+            <label>Last Name <span>*</span></label>
+            <input type="text" id="f-last" placeholder="Smith" autocomplete="family-name">
+            <div class="field-error" id="err-last">Required</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Company / Business <span>*</span></label>
+          <input type="text" id="f-company" placeholder="Acme Pty Ltd" autocomplete="organization">
+          <div class="field-error" id="err-company">Required</div>
+        </div>
+
+        <div class="form-group">
+          <label>Business Location <span>*</span></label>
+          <input type="text" id="f-location" placeholder="Sydney, Australia" autocomplete="country-name">
+          <div class="field-error" id="err-location">Required</div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Phone Number <span>*</span></label>
+            <input type="tel" id="f-phone" placeholder="+61 400 000 000" autocomplete="tel">
+            <div class="field-error" id="err-phone">Required</div>
+          </div>
+          <div class="form-group">
+            <label>Work Email <span>*</span></label>
+            <input type="email" id="f-email" placeholder="alice@acme.com" autocomplete="email">
+            <div class="field-error" id="err-email">Valid email required</div>
+          </div>
+        </div>
+
+        <div class="form-group last">
+          <label>Countries / Regions of Interest <span>*</span></label>
+          <div class="country-checkboxes" id="countryCheckboxes"></div>
+          <div class="field-error" id="err-countries">Select at least one country</div>
+          <div class="form-hint">Select all countries you're interested in hiring in.</div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-submit" id="btnSubmit">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span id="btnLabel">Download Guide</span>
+        </button>
+        <div class="send-error" id="sendError">Something went wrong sending your details — please try again or contact us directly.</div>
+        <div class="btn-privacy">By submitting, you agree to Employment Hero's <a href="https://employmenthero.com/privacy-policy/" target="_blank" style="color:var(--purple)">Privacy Policy</a>. We may contact you about HeroForce services.</div>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="modal-success" id="successState">
+      <div class="success-icon">✅</div>
+      <div class="success-title">You're all set!</div>
+      <div class="success-sub">Thanks — your guide(s) are opening now. A member of the HeroForce team will be in touch shortly.</div>
+      <div class="download-links" id="downloadLinks"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── EmailJS config ──
+// Sign up free at emailjs.com → create a service + template, then paste IDs below
+const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';   // e.g. 'user_abc123'
+const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';   // e.g. 'service_heroforce'
+const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';  // e.g. 'template_lead'
+const TO_EMAIL = 'ben.knight@employmenthero.com';
+
+emailjs.init(EMAILJS_PUBLIC_KEY);
+
+// ── Data ──
+const G = 'https://drive.google.com/file/d/';
+const V = '/view';
+
+const countries = [
+  { name:"Argentina",    flag:"🇦🇷", docs:[{name:"Argentina Employment Guide",         type:"Guide",        url:G+"1y7hvV6ZkZF19Ps-TiqHg44xpAV1cXHlq"+V}]},
+  { name:"Australia",    flag:"🇦🇺", docs:[]},
+  { name:"Bangladesh",   flag:"🇧🇩", docs:[{name:"Bangladesh Employment Guide",         type:"Guide",        url:G+"1D561maWf0O2yjL_p0HLgbEGML6ve0kBc"+V}]},
+  { name:"Belgium",      flag:"🇧🇪", docs:[{name:"Belgium Country Entitlements",         type:"Entitlements", url:G+"1jqzDBVJaExOHqxb-Fzq3ts8oB7ZfvpWC"+V}]},
+  { name:"Bosnia",       flag:"🇧🇦", docs:[{name:"Bosnia & Herzegovina Employment Guide",type:"Guide",        url:G+"1iJeVYC7EVKD_y_JMuLaZl7uV3TfawP-N"+V}]},
+  { name:"Brazil",       flag:"🇧🇷", docs:[{name:"Brazil Country Entitlements",          type:"Entitlements", url:G+"1_qJ7BPWbV6pa-cLSt_v9hRbhiDULT3TA"+V}]},
+  { name:"Canada",       flag:"🇨🇦", docs:[{name:"Canada Employment Guide",              type:"Guide",        url:G+"19edlQRErtXhUhg_aluLwMwYFBWlUZ-7-"+V},{name:"Canada Country Entitlements",type:"Entitlements",url:G+"1eQ-klvPQgeigQ0rx5Wsrifz3IQ5DE2VZ"+V}]},
+  { name:"China",        flag:"🇨🇳", docs:[{name:"China Employment Guide",               type:"Guide",        url:G+"1tASwmDWJYSq6JjFaVuDNr74Xu9tdPn9_"+V},{name:"China Entitlements",type:"Entitlements",url:G+"1h97Z251VW2DB2p8p5I5raY_ci5XuTOi0"+V}]},
+  { name:"France",       flag:"🇫🇷", docs:[{name:"France Employment Guide",              type:"Guide",        url:G+"11t84IMj8Z1sbN3XsRl5Ov6p4HU_pK-Ot"+V},{name:"France Country Entitlements",type:"Entitlements",url:G+"19sV6NmPVx1myXvAYY72CdWC3J5abzfZa"+V}]},
+  { name:"Germany",      flag:"🇩🇪", docs:[{name:"Germany Employment Guide",             type:"Guide",        url:G+"1AfMQmmfdFw_o8ZvvMjEQi4jLKyE6k1Oz"+V},{name:"Germany Country Entitlements",type:"Entitlements",url:G+"1UcOpXEUodvZrgKhrSC2aZykJjDRdI6aP"+V}]},
+  { name:"Greece",       flag:"🇬🇷", docs:[{name:"Greece Entitlements & Benefits",       type:"Entitlements", url:G+"1sAv-nuw8juxLyrU72fYWAR3WCg0vjIy9"+V}]},
+  { name:"Hong Kong",    flag:"🇭🇰", docs:[{name:"Hong Kong Employment Guide",           type:"Guide",        url:G+"1-jbvkEfIrIvKU1S2xI8dsKyzlP9Zjc5M"+V}]},
+  { name:"India",        flag:"🇮🇳", docs:[{name:"India Country Guide",                  type:"Guide",        url:G+"1mjUM47oRClaWJtcPJGiXnksiBzHX1Y8t"+V},{name:"India Country Entitlements",type:"Entitlements",url:G+"14z5X1FDkDIw4W_QJh9SMVByVhQjvUNik"+V}]},
+  { name:"Indonesia",    flag:"🇮🇩", docs:[{name:"Indonesia Employment Guide",           type:"Guide",        url:G+"1-FUblfv8Lej2XkWa2maURVCUSwZVwDLJ"+V}]},
+  { name:"Ireland",      flag:"🇮🇪", docs:[{name:"Ireland Country Entitlements",         type:"Entitlements", url:G+"1DSQoV3hVsvLwmx5ofl1Xo7Y59obQK6dq"+V}]},
+  { name:"Italy",        flag:"🇮🇹", docs:[{name:"Italy Country Entitlements",           type:"Entitlements", url:G+"1lbZjb0i1Sbtw_j37A14dg78dE0mPynPO"+V}]},
+  { name:"Japan",        flag:"🇯🇵", docs:[{name:"Japan Employment Guide",               type:"Guide",        url:G+"1nlxJlAQqhk2z7KVGvtJU9q95qULg4EcK"+V}]},
+  { name:"Malaysia",     flag:"🇲🇾", docs:[{name:"Malaysia Employment Guide",            type:"Guide",        url:G+"1_W7J9hIZV4tyhnL2N91BKlfBOuClO172"+V},{name:"Malaysia Country Entitlements",type:"Entitlements",url:G+"1xkL9o95GX7d2XBgybZ-o3nm4_gdozafZ"+V}]},
+  { name:"Myanmar",      flag:"🇲🇲", docs:[{name:"Myanmar Employment Guide",             type:"Guide",        url:G+"1eWE-EKLU-44em-O0vp-O8Y_oIhF73sE4"+V}]},
+  { name:"Nepal",        flag:"🇳🇵", docs:[{name:"Nepal Employment Guide",               type:"Guide",        url:G+"1bFDmJHZvf7aXGEDDY_P5ZdAmlvKy6YP9"+V}]},
+  { name:"Netherlands",  flag:"🇳🇱", docs:[{name:"Netherlands Entitlements 2026",        type:"Guide",        url:G+"1FmLfQvPcgp9mEgKW8gksGknt4p6kzItB"+V},{name:"Netherlands Country Entitlements",type:"Entitlements",url:G+"1zXLx8drLrf9OcCbv1kGr9bNTA6owDUfF"+V}]},
+  { name:"New Zealand",  flag:"🇳🇿", docs:[]},
+  { name:"Norway",       flag:"🇳🇴", docs:[{name:"Norway Employment Guide",              type:"Guide",        url:G+"1Td_PfW074UpTzBwGjeZOtNAJNvVz3lWz"+V}]},
+  { name:"Philippines",  flag:"🇵🇭", docs:[{name:"Philippines Employment Guide",         type:"Guide",        url:G+"1jdFU0mot_lG6Ak4zl1TJR76WVGYQniuF"+V}]},
+  { name:"Poland",       flag:"🇵🇱", docs:[]},
+  { name:"Portugal",     flag:"🇵🇹", docs:[{name:"Portugal Entitlements 2026",           type:"Guide",        url:G+"1PJqjTm9O7XkW4klGTLDdJOOLDV6-v0Ih"+V},{name:"Portugal Country Entitlements",type:"Entitlements",url:G+"1mlZ9eUs8BwTgFwRe8lJZM3nu2KhkdFWS"+V}]},
+  { name:"Puerto Rico",  flag:"🇵🇷", docs:[{name:"Puerto Rico Employment Guide",         type:"Guide",        url:G+"1TFPO-vwNhF_Al02rvtvPDhUZBSBJSmkJ"+V}]},
+  { name:"Serbia",       flag:"🇷🇸", docs:[{name:"Serbia Employment Guide",              type:"Guide",        url:G+"1pRMaKQZ5DlXSZMbbrvGl6jLKWOPYfQwN"+V}]},
+  { name:"Singapore",    flag:"🇸🇬", docs:[{name:"Singapore Employment Guide",           type:"Guide",        url:G+"1-Og4y3Q4YmPbRGgyBk4hUKYKEbAw9nY7"+V}]},
+  { name:"South Africa", flag:"🇿🇦", docs:[{name:"South Africa Country Entitlements",    type:"Entitlements", url:G+"1N7O-Y42zZLHLTFtwMMrF7SjXTrl9M1LW"+V}]},
+  { name:"South Korea",  flag:"🇰🇷", docs:[{name:"South Korea Employment Guide",         type:"Guide",        url:G+"1jgBzkTyzYYKzWyEQBuC5ynnfsqVSR4jx"+V}]},
+  { name:"Spain",        flag:"🇪🇸", docs:[{name:"Spain Benefits & Entitlements",        type:"Entitlements", url:G+"1q8_sOY534hzIoZZ7pYo8QucsTbikXtcb"+V}]},
+  { name:"Taiwan",       flag:"🇹🇼", docs:[{name:"Taiwan Employment Guide",              type:"Guide",        url:G+"129qEUnCsE5YDw9i31TEXxo-DhVSt9piw"+V}]},
+  { name:"Thailand",     flag:"🇹🇭", docs:[{name:"Thailand Employment Guide",            type:"Guide",        url:G+"1G0jLB5v_Pe_a48a3IrohkTWJAvfoe6SL"+V}]},
+  { name:"UAE",          flag:"🇦🇪", docs:[{name:"UAE Country Entitlements",             type:"Entitlements", url:G+"1TYiSkjH4cyNzRdbN7iQqtXWqx-grr2S_"+V}]},
+  { name:"UK",           flag:"🇬🇧", docs:[{name:"UK Employment Guide",                  type:"Guide",        url:G+"1FThn2LQGmJjAxw0cISy8mZ9Pd-h06B8f"+V}]},
+  { name:"Uruguay",      flag:"🇺🇾", docs:[{name:"Uruguay Employment Guide",             type:"Guide",        url:G+"153EvehNqYbFu33S1Vh38TsioXoFkCf1A"+V}]},
+  { name:"USA",          flag:"🇺🇸", docs:[{name:"USA Employment Guide",                 type:"Guide",        url:G+"1mp6_cvB-7sew7kZWbOj8wUe_Lk8hMd1t"+V},{name:"USA Quick Reference",type:"Summary",url:G+"1sl_THQJc5QX4lZWpPHZRlwz0kME6JFIR"+V}]},
+  { name:"Vietnam",      flag:"🇻🇳", docs:[{name:"Vietnam Employment Guide",             type:"Guide",        url:G+"1I5fqGFowzdjMZtoI32rEal36jUJI6VMZ"+V}]}
+].sort((a,b) => a.name.localeCompare(b.name));
+
+const typeColors = {
+  Guide:        {bg:'#EDE8FA', text:'#6C1FD4'},
+  Entitlements: {bg:'#D1FAE5', text:'#065F46'},
+  Summary:      {bg:'#FEF3C7', text:'#92400E'},
+};
+
+// ── Queue: tracks all docs clicked before submitting ──
+let docQueue = []; // [{name, url}]
+
+// ── Populate country checkboxes ──
+const cbContainer = document.getElementById('countryCheckboxes');
+countries.forEach(c => {
+  const item = document.createElement('div');
+  item.className = 'checkbox-item';
+  const id = 'cb-' + c.name.replace(/\s/g,'_');
+  item.innerHTML = `<input type="checkbox" id="${id}" value="${c.name}"><label for="${id}">${c.flag} ${c.name}</label>`;
+  cbContainer.appendChild(item);
+});
+
+// ── Render cards ──
+function renderCard(c) {
+  const hasDocs = c.docs.length > 0;
+  const docCount = hasDocs ? `${c.docs.length} document${c.docs.length>1?'s':''} available` : 'Guide coming soon';
+  const docsHtml = hasDocs
+    ? c.docs.map(d => {
+        const col = typeColors[d.type] || typeColors.Guide;
+        return `<button class="doc-link" onclick="queueDoc('${encodeURIComponent(d.name)}','${encodeURIComponent(d.url)}','${c.name}')">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="doc-name">${d.name}</span>
+          <span class="doc-type" style="background:${col.bg};color:${col.text}">${d.type}</span>
+        </button>`;
+      }).join('')
+    : `<div class="coming-soon-pill">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Guide coming soon
+      </div>`;
+  return `<div class="card" data-name="${c.name.toLowerCase()}">
+    <div class="card-header">
+      <div class="flag">${c.flag}</div>
+      <div class="country-info">
+        <div class="country-name">${c.name}</div>
+        <div class="doc-count">${docCount}</div>
+      </div>
+    </div>
+    <div class="${hasDocs ? 'card-docs' : 'coming-soon'}">${docsHtml}</div>
+  </div>`;
+}
+
+function render(list) {
+  const grid = document.getElementById('grid');
+  const info = document.getElementById('results-info');
+  if (!list.length) {
+    grid.innerHTML = `<div class="no-results"><h3>No countries found</h3><p>Try a different search term.</p></div>`;
+    info.textContent = '';
+  } else {
+    grid.innerHTML = list.map(renderCard).join('');
+    info.textContent = list.length < countries.length ? `Showing ${list.length} of ${countries.length} countries` : '';
+  }
+}
+
+render(countries);
+document.getElementById('search').addEventListener('input', function() {
+  const q = this.value.toLowerCase().trim();
+  render(q ? countries.filter(c => c.name.toLowerCase().includes(q)) : countries);
+});
+
+// ── Queue a doc and open modal ──
+function queueDoc(encodedName, encodedUrl, countryName) {
+  const name = decodeURIComponent(encodedName);
+  const url  = decodeURIComponent(encodedUrl);
+
+  // Add to queue if not already there
+  if (!docQueue.find(d => d.url === url)) {
+    docQueue.push({name, url});
+  }
+
+  // Tick the relevant country checkbox
+  const cb = document.querySelector(`#countryCheckboxes input[value="${countryName}"]`);
+  if (cb) cb.checked = true;
+
+  // Update the queued doc pills in the modal header
+  renderQueuedDocs();
+
+  // Update button label
+  const count = docQueue.length;
+  document.getElementById('btnLabel').textContent = count > 1 ? `Download ${count} Guides` : 'Download Guide';
+
+  openModal();
+}
+
+function renderQueuedDocs() {
+  const container = document.getElementById('queuedDocs');
+  container.innerHTML = docQueue.map(d => `
+    <div class="queued-doc-pill">
+      <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      ${d.name}
+    </div>
+  `).join('');
+}
+
+function openModal() {
+  document.getElementById('formState').style.display = '';
+  document.getElementById('successState').style.display = 'none';
+  document.getElementById('sendError').classList.remove('show');
+  document.getElementById('modalOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── Validation helpers ──
+function setError(fieldId, errId, show) {
+  const el = document.getElementById(fieldId);
+  const err = document.getElementById(errId);
+  if (show) { el.classList.add('error'); err.classList.add('show'); }
+  else       { el.classList.remove('error'); err.classList.remove('show'); }
+}
+
+// ── Submit ──
+document.getElementById('btnSubmit').addEventListener('click', async function() {
+  const btn = this;
+  let valid = true;
+
+  // Text fields
+  const textFields = [
+    {id:'f-first',   err:'err-first'},
+    {id:'f-last',    err:'err-last'},
+    {id:'f-company', err:'err-company'},
+    {id:'f-location',err:'err-location'},
+    {id:'f-phone',   err:'err-phone'},
+  ];
+  textFields.forEach(f => {
+    const empty = !document.getElementById(f.id).value.trim();
+    setError(f.id, f.err, empty);
+    if (empty) valid = false;
+  });
+
+  // Email
+  const emailVal = document.getElementById('f-email').value.trim();
+  const emailBad = !emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
+  setError('f-email', 'err-email', emailBad);
+  if (emailBad) valid = false;
+
+  // Countries
+  const checked = [...document.querySelectorAll('#countryCheckboxes input:checked')];
+  const cbWrap = document.getElementById('countryCheckboxes');
+  const errC   = document.getElementById('err-countries');
+  if (!checked.length) {
+    cbWrap.classList.add('error'); errC.classList.add('show'); valid = false;
+  } else {
+    cbWrap.classList.remove('error'); errC.classList.remove('show');
+  }
+
+  if (!valid) return;
+
+  // Disable button + show spinner
+  btn.disabled = true;
+  document.getElementById('btnLabel').textContent = 'Sending…';
+  document.getElementById('sendError').classList.remove('show');
+
+  const submission = {
+    to_email:   TO_EMAIL,
+    first_name: document.getElementById('f-first').value.trim(),
+    last_name:  document.getElementById('f-last').value.trim(),
+    company:    document.getElementById('f-company').value.trim(),
+    location:   document.getElementById('f-location').value.trim(),
+    phone:      document.getElementById('f-phone').value.trim(),
+    email:      emailVal,
+    countries:  checked.map(c => c.value).join(', '),
+    documents:  docQueue.map(d => d.name).join('\n'),
+    timestamp:  new Date().toLocaleString('en-AU', {timeZone:'Australia/Sydney'}),
+  };
+
+  try {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, submission);
+
+    // Show success
+    document.getElementById('formState').style.display = 'none';
+    const dlContainer = document.getElementById('downloadLinks');
+    dlContainer.innerHTML = docQueue.map(d => `
+      <a href="${d.url}" class="btn-download" target="_blank" rel="noopener">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        ${d.name}
+      </a>
+    `).join('');
+    document.getElementById('successState').style.display = 'block';
+
+    // Auto-open all docs
+    docQueue.forEach((d, i) => {
+      setTimeout(() => window.open(d.url, '_blank', 'noopener'), i * 400);
+    });
+
+    // Reset queue for next session
+    docQueue = [];
+
+  } catch(err) {
+    console.error('EmailJS error:', err);
+    document.getElementById('sendError').classList.add('show');
+    btn.disabled = false;
+    document.getElementById('btnLabel').textContent = docQueue.length > 1 ? `Download ${docQueue.length} Guides` : 'Download Guide';
+  }
+});
+</script>
+</body>
+</html>
