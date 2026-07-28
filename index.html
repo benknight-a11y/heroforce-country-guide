@@ -253,7 +253,7 @@
 
 <script>
 // ── Google Apps Script webhook ──
-const WEBHOOK_URL = 'https://script.google.com/a/macros/employmenthero.com/s/AKfycbyfdnbyjMbF_BXma2BZpR-F5LX-reLoHjXMTlvWeWrWCrhcc0-t-qM7crZHw1-CdeNQ/exec';
+const WEBHOOK_URL = 'https://script.google.com/a/macros/employmenthero.com/s/AKfycby6mOZlYjORNy0WtBAWulvl1ThMgH74rEcezhSLNPqPep-NzWZSJvRndvUO0ei80osK/exec';
 
 // ── Data ──
 const G = 'https://drive.google.com/file/d/';
@@ -481,10 +481,12 @@ document.getElementById('btnSubmit').addEventListener('click', async function() 
   };
 
   try {
+    const formData = new FormData();
+    Object.keys(submission).forEach(key => formData.append(key, submission[key]));
     await fetch(WEBHOOK_URL, {
       method: 'POST',
       mode: 'no-cors',
-      body: JSON.stringify(submission),
+      body: formData,
     });
 
     // Show success
