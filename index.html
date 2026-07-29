@@ -152,7 +152,7 @@
 </div>
 
 <div class="stats-bar">
-  <div class="stat"><span class="stat-dot"></span><strong>39</strong> countries covered</div>
+  <div class="stat"><span class="stat-dot"></span><strong>75</strong> countries covered</div>
   <div class="stat"><span class="stat-dot"></span>Employment Hero HeroForce EOR</div>
   <div class="stat">Updated July 2026</div>
 </div>
@@ -253,52 +253,87 @@
 
 <script>
 // ── Google Apps Script webhook ──
-const WEBHOOK_URL = 'https://script.google.com/a/macros/employmenthero.com/s/AKfycby6mOZlYjORNy0WtBAWulvl1ThMgH74rEcezhSLNPqPep-NzWZSJvRndvUO0ei80osK/exec';
+const WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/28381529/44xepb3/';
 
 // ── Data ──
 const G = 'https://drive.google.com/file/d/';
 const V = '/view';
 
 const countries = [
-  { name:"Argentina",    flag:"🇦🇷", docs:[{name:"Argentina Employment Guide",         type:"Guide",        url:G+"1y7hvV6ZkZF19Ps-TiqHg44xpAV1cXHlq"+V}]},
+  { name:"Argentina",    flag:"🇦🇷", docs:[{name:"Argentina Employment Guide",         type:"Guide",        url:G+"1DDQstAIGsYmE02pJHe8PPLcTS15KfYMq"+V}]},
   { name:"Australia",    flag:"🇦🇺", docs:[{name:"Australia Employment Guide",type:"Guide",url:G+"1akA_YXzy0sRw-DZ7FbBeWxlU-l_8THGp"+V}]},
   { name:"Bangladesh",   flag:"🇧🇩", docs:[{name:"Bangladesh Employment Guide",         type:"Guide",        url:G+"1D561maWf0O2yjL_p0HLgbEGML6ve0kBc"+V}]},
-  { name:"Belgium",      flag:"🇧🇪", docs:[{name:"Belgium Country Entitlements",         type:"Entitlements", url:G+"1jqzDBVJaExOHqxb-Fzq3ts8oB7ZfvpWC"+V}]},
+  { name:"Belgium",      flag:"🇧🇪", docs:[{name:"Belgium Employment Guide",              type:"Guide",        url:G+"18_3gkWVH4vfZm7xbSVJPJUksYQU1xKSC"+V}]},
   { name:"Bosnia",       flag:"🇧🇦", docs:[{name:"Bosnia & Herzegovina Employment Guide",type:"Guide",        url:G+"1iJeVYC7EVKD_y_JMuLaZl7uV3TfawP-N"+V}]},
-  { name:"Brazil",       flag:"🇧🇷", docs:[{name:"Brazil Country Entitlements",          type:"Entitlements", url:G+"1_qJ7BPWbV6pa-cLSt_v9hRbhiDULT3TA"+V}]},
-  { name:"Canada",       flag:"🇨🇦", docs:[{name:"Canada Employment Guide",              type:"Guide",        url:G+"19edlQRErtXhUhg_aluLwMwYFBWlUZ-7-"+V},{name:"Canada Country Entitlements",type:"Entitlements",url:G+"1eQ-klvPQgeigQ0rx5Wsrifz3IQ5DE2VZ"+V}]},
-  { name:"China",        flag:"🇨🇳", docs:[{name:"China Employment Guide",               type:"Guide",        url:G+"1tASwmDWJYSq6JjFaVuDNr74Xu9tdPn9_"+V},{name:"China Entitlements",type:"Entitlements",url:G+"1h97Z251VW2DB2p8p5I5raY_ci5XuTOi0"+V}]},
-  { name:"France",       flag:"🇫🇷", docs:[{name:"France Employment Guide",              type:"Guide",        url:G+"11t84IMj8Z1sbN3XsRl5Ov6p4HU_pK-Ot"+V},{name:"France Country Entitlements",type:"Entitlements",url:G+"19sV6NmPVx1myXvAYY72CdWC3J5abzfZa"+V}]},
-  { name:"Germany",      flag:"🇩🇪", docs:[{name:"Germany Employment Guide",             type:"Guide",        url:G+"1AfMQmmfdFw_o8ZvvMjEQi4jLKyE6k1Oz"+V},{name:"Germany Country Entitlements",type:"Entitlements",url:G+"1UcOpXEUodvZrgKhrSC2aZykJjDRdI6aP"+V}]},
-  { name:"Greece",       flag:"🇬🇷", docs:[{name:"Greece Entitlements & Benefits",       type:"Entitlements", url:G+"1sAv-nuw8juxLyrU72fYWAR3WCg0vjIy9"+V}]},
+  { name:"Brazil",       flag:"🇧🇷", docs:[{name:"Brazil Employment Guide",              type:"Guide",        url:G+"1zIWvSJ6kIllQn9vBWo1AFS6tIBWopbwd"+V}]},
+  { name:"Canada",       flag:"🇨🇦", docs:[{name:"Canada Employment Guide",              type:"Guide",        url:G+"19edlQRErtXhUhg_aluLwMwYFBWlUZ-7-"+V}]},
+  { name:"China",        flag:"🇨🇳", docs:[{name:"China Employment Guide",               type:"Guide",        url:G+"1tASwmDWJYSq6JjFaVuDNr74Xu9tdPn9_"+V}]},
+  { name:"France",       flag:"🇫🇷", docs:[{name:"France Employment Guide",              type:"Guide",        url:G+"1RT62Jn3wzuNhKjAgLJDH22HiSVQgTVuG"+V}]},
+  { name:"Germany",      flag:"🇩🇪", docs:[{name:"Germany Employment Guide",             type:"Guide",        url:G+"1AfMQmmfdFw_o8ZvvMjEQi4jLKyE6k1Oz"+V}]},
+  { name:"Greece",       flag:"🇬🇷", docs:[{name:"Greece Employment Guide",              type:"Guide",        url:G+"12dnHIF6_xwBYuHQDdlDDs_gYbsJM2ch3"+V}]},
   { name:"Hong Kong",    flag:"🇭🇰", docs:[{name:"Hong Kong Employment Guide",           type:"Guide",        url:G+"1-jbvkEfIrIvKU1S2xI8dsKyzlP9Zjc5M"+V}]},
-  { name:"India",        flag:"🇮🇳", docs:[{name:"India Country Guide",                  type:"Guide",        url:G+"1mjUM47oRClaWJtcPJGiXnksiBzHX1Y8t"+V},{name:"India Country Entitlements",type:"Entitlements",url:G+"14z5X1FDkDIw4W_QJh9SMVByVhQjvUNik"+V}]},
+  { name:"India",        flag:"🇮🇳", docs:[{name:"India Employment Guide",               type:"Guide",        url:G+"1mjUM47oRClaWJtcPJGiXnksiBzHX1Y8t"+V}]},
   { name:"Indonesia",    flag:"🇮🇩", docs:[{name:"Indonesia Employment Guide",           type:"Guide",        url:G+"1-FUblfv8Lej2XkWa2maURVCUSwZVwDLJ"+V}]},
-  { name:"Ireland",      flag:"🇮🇪", docs:[{name:"Ireland Country Entitlements",         type:"Entitlements", url:G+"1DSQoV3hVsvLwmx5ofl1Xo7Y59obQK6dq"+V}]},
-  { name:"Italy",        flag:"🇮🇹", docs:[{name:"Italy Country Entitlements",           type:"Entitlements", url:G+"1lbZjb0i1Sbtw_j37A14dg78dE0mPynPO"+V}]},
+  { name:"Ireland",      flag:"🇮🇪", docs:[{name:"Ireland Employment Guide",             type:"Guide",        url:G+"1olNlqBuNrJ6OoCtfkr8dMVmKxEPDtNv3"+V}]},
+  { name:"Italy",        flag:"🇮🇹", docs:[{name:"Italy Employment Guide",               type:"Guide",        url:G+"1Y4JkS4nWIp260b8rCMd76ygLhuphhRZL"+V}]},
   { name:"Japan",        flag:"🇯🇵", docs:[{name:"Japan Employment Guide",               type:"Guide",        url:G+"1nlxJlAQqhk2z7KVGvtJU9q95qULg4EcK"+V}]},
-  { name:"Malaysia",     flag:"🇲🇾", docs:[{name:"Malaysia Employment Guide",            type:"Guide",        url:G+"1_W7J9hIZV4tyhnL2N91BKlfBOuClO172"+V},{name:"Malaysia Country Entitlements",type:"Entitlements",url:G+"1xkL9o95GX7d2XBgybZ-o3nm4_gdozafZ"+V}]},
+  { name:"Malaysia",     flag:"🇲🇾", docs:[{name:"Malaysia Employment Guide",            type:"Guide",        url:G+"1_W7J9hIZV4tyhnL2N91BKlfBOuClO172"+V}]},
   { name:"Myanmar",      flag:"🇲🇲", docs:[{name:"Myanmar Employment Guide",             type:"Guide",        url:G+"1eWE-EKLU-44em-O0vp-O8Y_oIhF73sE4"+V}]},
   { name:"Nepal",        flag:"🇳🇵", docs:[{name:"Nepal Employment Guide",               type:"Guide",        url:G+"1bFDmJHZvf7aXGEDDY_P5ZdAmlvKy6YP9"+V}]},
-  { name:"Netherlands",  flag:"🇳🇱", docs:[{name:"Netherlands Entitlements 2026",        type:"Guide",        url:G+"1FmLfQvPcgp9mEgKW8gksGknt4p6kzItB"+V},{name:"Netherlands Country Entitlements",type:"Entitlements",url:G+"1zXLx8drLrf9OcCbv1kGr9bNTA6owDUfF"+V}]},
+  { name:"Netherlands",  flag:"🇳🇱", docs:[{name:"Netherlands Employment Guide",         type:"Guide",        url:G+"1RFfYR-MY3yQTeSz4cuUvl0zwZiVBpE4_"+V}]},
   { name:"New Zealand",  flag:"🇳🇿", docs:[]},
   { name:"Norway",       flag:"🇳🇴", docs:[{name:"Norway Employment Guide",              type:"Guide",        url:G+"1Td_PfW074UpTzBwGjeZOtNAJNvVz3lWz"+V}]},
   { name:"Philippines",  flag:"🇵🇭", docs:[{name:"Philippines Employment Guide",         type:"Guide",        url:G+"1jdFU0mot_lG6Ak4zl1TJR76WVGYQniuF"+V}]},
   { name:"Poland",       flag:"🇵🇱", docs:[{name:"Poland Employment Guide",type:"Guide",url:G+"1YlwxqUzBjpqj-1oFx9efDl1tlmu6-B2S"+V}]},
-  { name:"Portugal",     flag:"🇵🇹", docs:[{name:"Portugal Entitlements 2026",           type:"Guide",        url:G+"1PJqjTm9O7XkW4klGTLDdJOOLDV6-v0Ih"+V},{name:"Portugal Country Entitlements",type:"Entitlements",url:G+"1mlZ9eUs8BwTgFwRe8lJZM3nu2KhkdFWS"+V}]},
+  { name:"Portugal",     flag:"🇵🇹", docs:[{name:"Portugal Employment Guide",            type:"Guide",        url:G+"1xdyPP3pGyIYae-zhBzJEWcwYk8btu-Sq"+V}]},
   { name:"Puerto Rico",  flag:"🇵🇷", docs:[{name:"Puerto Rico Employment Guide",         type:"Guide",        url:G+"1TFPO-vwNhF_Al02rvtvPDhUZBSBJSmkJ"+V}]},
   { name:"Serbia",       flag:"🇷🇸", docs:[{name:"Serbia Employment Guide",              type:"Guide",        url:G+"1pRMaKQZ5DlXSZMbbrvGl6jLKWOPYfQwN"+V}]},
   { name:"Singapore",    flag:"🇸🇬", docs:[{name:"Singapore Employment Guide",           type:"Guide",        url:G+"1-Og4y3Q4YmPbRGgyBk4hUKYKEbAw9nY7"+V}]},
-  { name:"South Africa", flag:"🇿🇦", docs:[{name:"South Africa Country Entitlements",    type:"Entitlements", url:G+"1N7O-Y42zZLHLTFtwMMrF7SjXTrl9M1LW"+V}]},
+  { name:"South Africa", flag:"🇿🇦", docs:[{name:"South Africa Employment Guide",        type:"Guide",        url:G+"1rrQs_xvPPu4g6yimvWkDJ8zA7dM7aqF-"+V}]},
   { name:"South Korea",  flag:"🇰🇷", docs:[{name:"South Korea Employment Guide",         type:"Guide",        url:G+"1jgBzkTyzYYKzWyEQBuC5ynnfsqVSR4jx"+V}]},
-  { name:"Spain",        flag:"🇪🇸", docs:[{name:"Spain Benefits & Entitlements",        type:"Entitlements", url:G+"1q8_sOY534hzIoZZ7pYo8QucsTbikXtcb"+V}]},
+  { name:"Spain",        flag:"🇪🇸", docs:[{name:"Spain Employment Guide",               type:"Guide",        url:G+"17EOtCmStD7nluPBb9v0v7Sv8n4RWaaZK"+V}]},
   { name:"Taiwan",       flag:"🇹🇼", docs:[{name:"Taiwan Employment Guide",              type:"Guide",        url:G+"129qEUnCsE5YDw9i31TEXxo-DhVSt9piw"+V}]},
   { name:"Thailand",     flag:"🇹🇭", docs:[{name:"Thailand Employment Guide",            type:"Guide",        url:G+"1G0jLB5v_Pe_a48a3IrohkTWJAvfoe6SL"+V}]},
-  { name:"UAE",          flag:"🇦🇪", docs:[{name:"UAE Country Entitlements",             type:"Entitlements", url:G+"1TYiSkjH4cyNzRdbN7iQqtXWqx-grr2S_"+V}]},
+  { name:"UAE",          flag:"🇦🇪", docs:[{name:"UAE Employment Guide",                 type:"Guide",        url:G+"1EZSWKUKi8jnj6sv6c6t7z00x9933Pk1U"+V}]},
   { name:"UK",           flag:"🇬🇧", docs:[{name:"UK Employment Guide",                  type:"Guide",        url:G+"1FThn2LQGmJjAxw0cISy8mZ9Pd-h06B8f"+V}]},
   { name:"Uruguay",      flag:"🇺🇾", docs:[{name:"Uruguay Employment Guide",             type:"Guide",        url:G+"153EvehNqYbFu33S1Vh38TsioXoFkCf1A"+V}]},
-  { name:"USA",          flag:"🇺🇸", docs:[{name:"USA Employment Guide",                 type:"Guide",        url:G+"1mp6_cvB-7sew7kZWbOj8wUe_Lk8hMd1t"+V},{name:"USA Quick Reference",type:"Summary",url:G+"1sl_THQJc5QX4lZWpPHZRlwz0kME6JFIR"+V}]},
-  { name:"Vietnam",      flag:"🇻🇳", docs:[{name:"Vietnam Employment Guide",             type:"Guide",        url:G+"1I5fqGFowzdjMZtoI32rEal36jUJI6VMZ"+V}]}
+  { name:"USA",          flag:"🇺🇸", docs:[{name:"USA Employment Guide",                 type:"Guide",        url:G+"1sl_THQJc5QX4lZWpPHZRlwz0kME6JFIR"+V}]},
+  { name:"Vietnam",      flag:"🇻🇳", docs:[{name:"Vietnam Employment Guide",             type:"Guide",        url:G+"1I5fqGFowzdjMZtoI32rEal36jUJI6VMZ"+V}]},
+  { name:"Armenia",      flag:"🇦🇲", docs:[{name:"Armenia Employment Guide",      type:"Guide", url:G+"1LGBcrhoT0rfma4OSLX-JfUmKJHxUVdoV"+V}]},
+  { name:"Austria",      flag:"🇦🇹", docs:[{name:"Austria Employment Guide",       type:"Guide", url:G+"1aHXpsR9J-mAMrVtnBectAL9macmPP71E"+V}]},
+  { name:"Bahrain",      flag:"🇧🇭", docs:[{name:"Bahrain Employment Guide",       type:"Guide", url:G+"1zeA78l9SQWIl9M0VbBjPBT5tMK5-MzR6"+V}]},
+  { name:"Bulgaria",     flag:"🇧🇬", docs:[{name:"Bulgaria Employment Guide",      type:"Guide", url:G+"1ZWdoU4eoTUk_GTCVoy3XBdJ4dMPBTdNk"+V}]},
+  { name:"Chile",        flag:"🇨🇱", docs:[{name:"Chile Employment Guide",         type:"Guide", url:G+"1SEiib-zT_KWwTn43j7IQkacSv2JGptp2"+V}]},
+  { name:"Colombia",     flag:"🇨🇴", docs:[{name:"Colombia Employment Guide",      type:"Guide", url:G+"1K-i7bAWypQMyAZwZIvG4ZFIuZ9xihTN8"+V}]},
+  { name:"Costa Rica",   flag:"🇨🇷", docs:[{name:"Costa Rica Employment Guide",    type:"Guide", url:G+"1hEfm6JggB7bqioNK4h-6oGKc9RvmlAOY"+V}]},
+  { name:"Croatia",      flag:"🇭🇷", docs:[{name:"Croatia Employment Guide",       type:"Guide", url:G+"1keZhzK4psJ7jEhF1S2zGAGSQtB2FQqxA"+V}]},
+  { name:"Cyprus",       flag:"🇨🇾", docs:[{name:"Cyprus Employment Guide",        type:"Guide", url:G+"19RlFRteyTZUUUroHVIG7ai6-1tePNqwe"+V}]},
+  { name:"Czech Republic",flag:"🇨🇿",docs:[{name:"Czech Republic Employment Guide",type:"Guide", url:G+"1zMHEOtuMAdmsg2bFiwnrdHhM0pKXDV-h"+V}]},
+  { name:"Denmark",      flag:"🇩🇰", docs:[{name:"Denmark Employment Guide",       type:"Guide", url:G+"10T1k79u4P3zi2HOWxCTZ4VFNRbafYxFQ"+V}]},
+  { name:"Egypt",        flag:"🇪🇬", docs:[{name:"Egypt Employment Guide",         type:"Guide", url:G+"1zvRl3i1X9riSxEjiGIbxKbdiIRP0WHdM"+V}]},
+  { name:"Estonia",      flag:"🇪🇪", docs:[{name:"Estonia Employment Guide",       type:"Guide", url:G+"1TA0FhJxmjHU0WzyEQPivi-KzXOmjMj-F"+V}]},
+  { name:"Finland",      flag:"🇫🇮", docs:[{name:"Finland Employment Guide",       type:"Guide", url:G+"1K4uxgRcc1M4uqRBlpYAGwWUPuzaTcw0U"+V}]},
+  { name:"Georgia",      flag:"🇬🇪", docs:[{name:"Georgia Employment Guide",       type:"Guide", url:G+"1LTIFNli4nLKM7POTtvK30TeA6gCyoWgl"+V}]},
+  { name:"Hungary",      flag:"🇭🇺", docs:[{name:"Hungary Employment Guide",       type:"Guide", url:G+"1Yyu3tdvEXgB4QNmzoTqK_yt6UqPzJNmT"+V}]},
+  { name:"Israel",       flag:"🇮🇱", docs:[{name:"Israel Employment Guide",        type:"Guide", url:G+"1le-VxZwASfIzpmxtf1NUIDivenZPWQDo"+V}]},
+  { name:"Jordan",       flag:"🇯🇴", docs:[{name:"Jordan Employment Guide",        type:"Guide", url:G+"1rQh52OK98vocfePq54KFwxXQvGu0BACM"+V}]},
+  { name:"Kenya",        flag:"🇰🇪", docs:[{name:"Kenya Employment Guide",         type:"Guide", url:G+"1mM6Oi0yvqJPgcIvmbk1GMqS2zliJQvZZ"+V}]},
+  { name:"Kuwait",       flag:"🇰🇼", docs:[{name:"Kuwait Employment Guide",        type:"Guide", url:G+"1tn1xCSX0bLAniDAjAaKMILTAFlhMxQIb"+V}]},
+  { name:"Luxembourg",   flag:"🇱🇺", docs:[{name:"Luxembourg Employment Guide",    type:"Guide", url:G+"1cD2g6VnsUIxGYeM_G8Dhm3qMRe5buzPo"+V}]},
+  { name:"Malta",        flag:"🇲🇹", docs:[{name:"Malta Employment Guide",         type:"Guide", url:G+"1UqhjZPadcmkhrmKdDmSa9cbrAnJIMpOx"+V}]},
+  { name:"Mauritius",    flag:"🇲🇺", docs:[{name:"Mauritius Employment Guide",     type:"Guide", url:G+"1g4w_rLTHnFTWDrGUfD_ZvXh9kEpbn9UB"+V}]},
+  { name:"Mexico",       flag:"🇲🇽", docs:[{name:"Mexico Employment Guide",        type:"Guide", url:G+"12nhxwjIj5QBsh3ojjRhZd_HBa99N9Oiz"+V}]},
+  { name:"Nigeria",      flag:"🇳🇬", docs:[{name:"Nigeria Employment Guide",       type:"Guide", url:G+"1lAs9VW9GA0rcJ-uxOYG1dXeIuKgj72ML"+V}]},
+  { name:"Pakistan",     flag:"🇵🇰", docs:[{name:"Pakistan Employment Guide",      type:"Guide", url:G+"1nzGWkrAeK8pVLHImM3a7Nu-zNDRpi1i5"+V}]},
+  { name:"Panama",       flag:"🇵🇦", docs:[{name:"Panama Employment Guide",        type:"Guide", url:G+"1sM81_LcdeJ90QWX7YOYSl53DdVDZxH96"+V}]},
+  { name:"Papua New Guinea",flag:"🇵🇬",docs:[{name:"Papua New Guinea Employment Guide",type:"Guide",url:G+"1bZcMYX0vluewaNh_wLM2pvu3N8aUyWZt"+V}]},
+  { name:"Peru",         flag:"🇵🇪", docs:[{name:"Peru Employment Guide",          type:"Guide", url:G+"1ZlYwr-VlaUBbuY8XmdKOkM1OivQG5Ybw"+V}]},
+  { name:"Qatar",        flag:"🇶🇦", docs:[{name:"Qatar Employment Guide",         type:"Guide", url:G+"1T8n4a1Ua3n8xHO1aR-OUDkUrWEy_pywg"+V}]},
+  { name:"Romania",      flag:"🇷🇴", docs:[{name:"Romania Employment Guide",       type:"Guide", url:G+"1nVAoGU9-WnsnODcbvPcUpHZCxLoQ4Dw2"+V}]},
+  { name:"Saudi Arabia", flag:"🇸🇦", docs:[{name:"Saudi Arabia Employment Guide",  type:"Guide", url:G+"1gcm4cp0aBS_KHsyaewO9UGuU2QQY1HOt"+V}]},
+  { name:"Sweden",       flag:"🇸🇪", docs:[{name:"Sweden Employment Guide",        type:"Guide", url:G+"1m-UlnK7bXTlqXJje5coU6gOjepIq8aRr"+V}]},
+  { name:"Switzerland",  flag:"🇨🇭", docs:[{name:"Switzerland Employment Guide",   type:"Guide", url:G+"1FTH2a67-eY67FiKkkvDEbYU5RbV47F2o"+V}]},
+  { name:"Turkey",       flag:"🇹🇷", docs:[{name:"Turkey Employment Guide",        type:"Guide", url:G+"1Tf4PAv32FQVlNmJGdzs8ghimCAUwGJzV"+V}]},
 ].sort((a,b) => a.name.localeCompare(b.name));
 
 const typeColors = {
