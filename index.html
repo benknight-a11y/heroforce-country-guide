@@ -523,6 +523,19 @@ document.getElementById('btnSubmit').addEventListener('click', async function() 
     });
     if (!response.ok) throw new Error('Formspree error');
 
+    // Add docs for any checked countries not already in the queue
+    checked.forEach(cb => {
+      const countryName = cb.value;
+      const countryData = countries.find(c => c.name === countryName);
+      if (countryData) {
+        countryData.docs.forEach(d => {
+          if (!docQueue.find(q => q.url === d.url)) {
+            docQueue.push({name: d.name, url: d.url});
+          }
+        });
+      }
+    });
+
     // Show success
     document.getElementById('formState').style.display = 'none';
     const dlContainer = document.getElementById('downloadLinks');
